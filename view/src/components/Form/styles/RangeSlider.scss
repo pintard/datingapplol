@@ -1,0 +1,30 @@
+.range-slider-container {
+    height: 40px;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .range-slider-rail {
+        background: #FDF1F1;
+        height: 16px;
+        width: 100%;
+        position: absolute;
+        border-radius: 10px;
+    }
+
+    .range-slider-track {
+        background: #FFD3D3;
+        height: 16px;
+        position: absolute;
+    }
+
+    .range-slider-handle {
+        background: #7CA7E7;
+        height: 26px;
+        width: 26px;
+        border-radius: 100%;
+        position: absolute;
+        margin-left: -10px;
+        cursor: pointer;
+    }
+}

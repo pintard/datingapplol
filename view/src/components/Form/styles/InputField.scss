@@ -1,0 +1,16 @@
+input {
+    padding: 24px 16px;
+    background: #FDF1F1;
+    color: #7CA7E7;
+    border-radius: 10px;
+    font-size: 1.7em;
+    border: 2px solid transparent;
+}
+
+input::placeholder {
+    color: #E5B1B1;
+}
+
+input:focus {
+    border: 2px solid #7CA7E7;
+}

@@ -1,0 +1,28 @@
+{
+  "name": "dating-app",
+  "author": {
+    "name": "Donovan Pintard",
+    "email": "donovanpintard@gmail.com",
+    "website": "donovanpintard.com",
+    "github": "github.com/pintard"
+  },
+  "description": "dating app",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build": "cd view/ && npm install && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "express": "^4.17.1",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0",
+    "nodemon": "^2.0.12"
+  }
+}

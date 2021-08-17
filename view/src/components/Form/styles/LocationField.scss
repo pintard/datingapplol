@@ -1,0 +1,28 @@
+.location-field-input {
+    width: 100%;
+}
+
+.location-field-container {
+    position: relative;
+}
+
+.location-field-menu {
+    background: white;
+    position: absolute;
+    width: 100%;
+    margin-top: 10px;
+    z-index: 99;
+    border-radius: 12px;
+    border: 1px solid #C4B6B6;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.location-field-menu li {
+    padding: 20px;
+    cursor: pointer;
+}
+
+.location-field-menu li:hover {
+    background: #DEEBFF;
+}
