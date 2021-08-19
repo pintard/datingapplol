@@ -1,25 +1,28 @@
 if (process.env.NODE_ENV !== 'production') require('dotenv').config()
 const Express = require('express')
 const App = Express()
-const insertUser = require('./insert')
+const insertUser = require('./SQL/insert')
+const selectUsers = require('./SQL/select')
 
 const port = process.env.PORT
-const build = `${__dirname}/view/build`
+const build = `${__dirname}/client/build`
 
 App.set('json spaces', 2)
 App.use(Express.json())
 App.use(Express.urlencoded({ extended: false }))
 App.use(Express.static(build))
 
-App.get('/', (_, response) =>
+App.get('/', (request, response) =>
     response.sendFile(`${build}/index.html`))
 
 App.route('/api/users')
-    .get((request, response) => { })
-    .post((request, response) => {
-        /** Flattens request body into single user object */
+    /** Gets a table of all users */
+    .get(async (request, response) => response.send(await selectUsers()))
+    /** Posts a user to the database and return list of matches */
+    .post(async (request, response) => {
         const user = Object.assign(...Object.values(request.body))
-        insertUser(user)
+        const matches = await insertUser(user)
+        response.json(matches)
     })
 
 App.route('/api/users/:id')

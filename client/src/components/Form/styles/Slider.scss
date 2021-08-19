@@ -6,7 +6,7 @@
 
     .slider-rail {
         background: #FDF1F1;
-        height: 16px;
+        height: 24px;
         width: 100%;
         position: absolute;
         border-radius: 10px;
@@ -14,7 +14,7 @@
 
     .slider-track {
         background: #FFD3D3;
-        height: 18px;
+        height: 24px;
         width: 100%;
         position: absolute;
         border-radius: 10px 0 0 10px;
@@ -22,8 +22,8 @@
 
     .slider-handle {
         background: #7CA7E7;
-        height: 26px;
-        width: 26px;
+        height: 32px;
+        width: 32px;
         border-radius: 100%;
         position: absolute;
         margin-left: -10px;

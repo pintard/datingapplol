@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 
 import InputField from './Form/InputField'
@@ -10,12 +10,13 @@ import LocationField from './Form/LocationField'
 
 const user = {}
 
-const verify = (data, history) => {
+const verify = async (data, history) => {
     const [key, fields] = Object.entries(data)[0]
     const routeMap = {
         signUp: "about",
         about: "location",
-        location: "interest"
+        location: "interest",
+        interest: "result"
     }
 
     if (Object.values(fields).every(val => val)) {
@@ -25,12 +26,25 @@ const verify = (data, history) => {
         }
         user[key] = fields
         if (key !== "interest") history.push(`/${routeMap[key]}`)
-        else fetch('/api/users', {
-            method: 'POST',
-            credentials: 'same-origin',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(user)
-        })
+        else {
+            try {
+                const post = new Request('/api/users', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(user)
+                })
+                const response = await fetch(post)
+                const matches = await response.json()
+                if (matches.length > 0) history.push({
+                    pathname: `/${routeMap[key]}`,
+                    state: {
+                        username: user.signUp.username,
+                        matches: matches
+                    }
+                })
+            } catch (err) { console.error(err) }
+        }
         console.log(user)
     } else alert("all fields must be filled")
 }
@@ -146,6 +160,7 @@ export const LocationView = () => {
 }
 
 export const InterestView = () => {
+    const history = useHistory()
     const [data, setData] = useState({
         interest: {
             hobbies: "",
@@ -175,7 +190,49 @@ export const InterestView = () => {
                 <label>pets</label>
                 <Combobox name="pets" options={pets} setData={setData} />
             </span>
-            <button onClick={() => verify(data, null)}>submit</button>
+            <button onClick={() => verify(data, history)}>submit</button>
+        </div>
+    )
+}
+
+export const ResultView = () => {
+    const location = useLocation()
+    const { username, matches } = location.state
+
+    return (
+        <div>
+            {matches.length <= 0 ?
+                <h1 id="matches-header">No matches found!</h1> :
+                <>
+                    <h1 id="matches-header">Matches for {username}</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>username</th>
+                                <th>address</th>
+                                <th>age</th>
+                                <th>gender</th>
+                                <th>hobbies</th>
+                                <th>outgoing</th>
+                                <th>pets</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {matches.map((match, id) => (
+                                <tr key={id}>
+                                    <td>{match.username}</td>
+                                    <td>{match.address}</td>
+                                    <td>{match.age}</td>
+                                    <td>{match.gender}</td>
+                                    <td>{match.hobbies}</td>
+                                    <td>{match.outgoing}</td>
+                                    <td>{match.pets}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </>
+            }
         </div>
     )
 }

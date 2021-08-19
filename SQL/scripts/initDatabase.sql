@@ -13,7 +13,7 @@ CREATE TABLE coordinate_table (
 
 CREATE TABLE address_table (
     id BIGSERIAL PRIMARY KEY,
-    value VARCHAR(50) NOT NULL,
+    value TEXT NOT NULL,
     -- coords
     coordinate_id BIGSERIAL NOT NULL
         REFERENCES coordinate_table (id),

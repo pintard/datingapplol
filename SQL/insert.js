@@ -1,16 +1,14 @@
-const Pool = require('pg').Pool
 const bcrypt = require('bcrypt')
+const pool = require('./PgPool')
 
 const insertUser = async ({ address, repeatPassword, ...user }) => {
-    const pool = new Pool({
-        user: process.env.PGUSER,
-        password: process.env.PGPASSWORD,
-        host: process.env.PGHOST,
-        database: process.env.PGDATABASE,
-        port: process.env.PGPORT
-    })
-
     try {
+        const interestMap = {
+            men: ['man'],
+            women: ['woman'],
+            others: ['other'],
+            everyone: ['man', 'woman', 'other']
+        }
         /** Store hashed pwd in user query insert */
         user.password = await bcrypt.hash(user.password, 10)
         /** Format given value based on data type */
@@ -23,28 +21,34 @@ const insertUser = async ({ address, repeatPassword, ...user }) => {
         const userKeys = Object.keys(user).join(', ')
         /** Stringify user property values for storage */
         const userValues = Object.values(user).map(x => format(x))
-
-        const coordResults = await pool.query(
-            `INSERT INTO coordinate_table (${coordKeys})
-                VALUES (${coordValues})`
+        /** Stringify user property values for storage */
+        const interestValues = interestMap[user.interest].map(x => format(x))
+        /** Insert to coordinate table with address table association */
+        await pool.query(`INSERT INTO coordinate_table (${coordKeys})
+            VALUES (${coordValues})`)
+        /** Insert to address table with user table association */
+        await pool.query(`INSERT INTO address_table (value)
+            VALUES ('${address.value}')`)
+        /** Insert to main user table */
+        await pool.query(`INSERT INTO user_table (${userKeys})
+            VALUES (${userValues})`)
+        /** Queries all existing users that match the 5 given properties */
+        const matches = await pool.query(
+            `SELECT a.username, b.value as address, a.age, a.gender,
+                    a.hobbies, a.outgoing, a.pets
+                FROM
+                    user_table a, address_table b
+                WHERE
+                    a.id=b.id
+                    AND age BETWEEN ${user.range[0]} and ${user.range[1]}
+                    AND gender in (${interestValues})
+                    AND hobbies='${user.hobbies}'
+                    AND outgoing='${user.outgoing}'
+                    AND pets='${user.pets}'`
         )
-
-        const addressResults = await pool.query(
-            `INSERT INTO address_table (value)
-                VALUES ('${address.value}')`
-        )
-
-        const userResults = await pool.query(
-            `INSERT INTO user_table (${userKeys})
-                VALUES (${userValues})`
-        )
-
-        // const matches = await pool.query(
-        //     `SELECT * FROM user_table `
-        // )
-
-        console.log(user)
-        // response.json()
+        console.log('user', user)
+        console.table(matches.rows.length > 0 ? matches.rows : '')
+        return matches.rows || []
     } catch (error) { console.error(error) }
 }
 

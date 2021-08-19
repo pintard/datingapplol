@@ -9,7 +9,8 @@ import {
   SignUpView,
   AboutView,
   LocationView,
-  InterestView
+  InterestView,
+  ResultView
 } from './components/Views'
 import './index.css'
 
@@ -22,6 +23,7 @@ ReactDOM.render(
           <Route exact path="/about" component={AboutView} />
           <Route exact path="/location" component={LocationView} />
           <Route exact path="/interest" component={InterestView} />
+          <Route exact path="/result" component={ResultView} />
         </Switch>
       </div>
     </Router>
