@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Alata&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
 
 * {
   margin: 0;
@@ -11,7 +11,7 @@
   -ms-overflow-style: none;
   outline: none;
   border: none;
-  font-family: 'Alata', sans-serif;
+  font-family: 'Varela Round', sans-serif;
   font-size: 12px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -27,10 +27,7 @@ body,
 #root {
   width: 100%;
   height: 100%;
-  background: #c3e2c9;
-}
-
-#root {
+  background: #d3ecd8;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -38,48 +35,50 @@ body,
 
 /* MAIN STAGE */
 
-@import url('https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:wght@700&display=swap');
-
-#view {
-  background: #F8E6E6;
+.stage-view {
+  background: url('cloud.svg') no-repeat;
+  background-size: contain;
+  background-color: #F8E6E6;
   width: 50%;
   max-width: 600px;
   min-width: 500px;
-  /* height: 85%; */
-  border-radius: 32px;
+  border-radius: 26px;
   padding: 50px;
-}
-
-.stage-view {
-  height: 100%;
-  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 34px;
+  gap: 28px;
+  -webkit-box-shadow: 6px 10px 20px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 6px 10px 20px 0 rgba(0, 0, 0, 0.1);
 }
 
 .stage-view>span {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
 }
 
 .stage-view h2 {
   font-size: 4em;
-  font-family: 'Averia Serif Libre', cursive !important;
+  font-weight: bold;
   text-align: center;
-  color: #CA9292;
+  color: #ebc9c9;
+  line-height: 90%;
+  white-space: nowrap;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  margin-bottom: 20px;
+  text-shadow: 0.05em 0.08em #c2a4a4;
 }
 
 .stage-view span label {
-  color: #9dada1;
-  font-size: 2.6em;
+  color: #a0c2a9;
+  font-size: 2em;
+  font-weight: bold;
   line-height: 1em;
+  letter-spacing: 0.1em;
 }
 
 .stage-view span span {
@@ -95,15 +94,27 @@ body,
 }
 
 .stage-view button {
-  font-family: 'Averia Serif Libre', cursive !important;
   padding: 24px;
   border: none;
   outline: none;
   cursor: pointer;
-  background: #8cb3ec;
-  color: white;
+  background: #99b8e7;
+  color: #5f83b9;
   border-radius: 10px;
   font-size: 2.4em;
+  font-weight: bold;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  margin-top: 25px;
+  letter-spacing: 0.1em;
+  -webkit-box-shadow: 4px 4px 0px 4px #839ec5;
+  box-shadow: 4px 4px 0px 4px #839ec5;
+}
+
+.stage-view button:hover {
+  background: #91b2e4;
 }
 
 #matches-header {
@@ -111,34 +122,86 @@ body,
   padding-bottom: 20px;
   font-size: 24px;
   font-weight: bold;
-  color: #CA9292;
+  color: #67a07a;
 }
 
 table {
   border-collapse: collapse;
   width: 100%;
-  background-color: #c3e2c9;
   /* border-radius: 12px; */
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 table td,
 table th {
-  padding: 9px;
+  padding: 20px 10px;
 }
 
 table tr:nth-child(even) {
   background-color: #ecdddd;
 }
 
-table tr:hover {
+table tr:nth-child(odd) {
   background-color: #f2f2f2;
 }
 
+table tr:hover {
+  background-color: #b3ceb8;
+  color: white;
+}
+
 table th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: center;
-  font-weight: bold;
+  text-align: left;
   background-color: #8cb3ec;
   color: white;
+}
+
+table tr:first-child th:first-child {
+  border-top-left-radius: 12px;
+}
+
+table tr:first-child th:last-child {
+  border-top-right-radius: 12px;
+}
+
+table tr:last-child td:first-child {
+  border-bottom-left-radius: 12px;
+}
+
+table tr:last-child td:last-child {
+  border-bottom-right-radius: 12px;
+}
+
+@media only screen and (max-width: 601px) {
+  .stage-view {
+    max-width: 500px;
+    min-width: 500px;
+  }
+}
+
+@media only screen and (max-width: 551px) {
+  .stage-view {
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    height: 100%;
+    border-radius: 0;
+    justify-content: flex-start;
+    padding: 30px;
+  }
+
+  .stage-view h2 {
+    font-size: 9vw;
+    margin-bottom: 10px;
+  }
+
+  .stage-view button {
+    margin-top: 10px;
+    font-size: 5vw;
+  }
+
+  .stage-view span label {
+    font-size: 5vw;
+  }
 }

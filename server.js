@@ -3,7 +3,6 @@ const Express = require('express')
 const App = Express()
 const insertUser = require('./SQL/insert')
 const selectUsers = require('./SQL/select')
-
 const port = process.env.PORT
 const build = `${__dirname}/client/build`
 
@@ -12,9 +11,11 @@ App.use(Express.json())
 App.use(Express.urlencoded({ extended: false }))
 App.use(Express.static(build))
 
+/** Serve built react app as static files on home */
 App.get('/', (request, response) =>
     response.sendFile(`${build}/index.html`))
 
+/** API route for general scope database interactions */
 App.route('/api/users')
     /** Gets a table of all users */
     .get(async (request, response) => response.send(await selectUsers()))
@@ -25,6 +26,7 @@ App.route('/api/users')
         response.json(matches)
     })
 
+/** API route for specific scope database interactions */
 App.route('/api/users/:id')
     .get((request, response) => { })
     .put((request, response) => { })

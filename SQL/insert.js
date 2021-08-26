@@ -1,6 +1,17 @@
 const bcrypt = require('bcrypt')
-const pool = require('./PgPool')
+const pool = require('./pgPool')
 
+/**
+ * Takes a user object to be inserted into the SQL database and queried against
+ * the existing database elements matching it's properties. Returns the
+ * available matches as an array of objects
+ *
+ * @param {Object} user - a dating app user object
+ * @param {string} user.address - the string value of the user's address
+ * @param {string} user.repeatPassword - the repeated password to be out filtered
+ *
+ * @returns {Array} an array of matches or an empty array
+ */
 const insertUser = async ({ address, repeatPassword, ...user }) => {
     try {
         const interestMap = {
@@ -9,8 +20,9 @@ const insertUser = async ({ address, repeatPassword, ...user }) => {
             others: ['other'],
             everyone: ['man', 'woman', 'other']
         }
-        /** Store hashed pwd in user query insert */
+
         user.password = await bcrypt.hash(user.password, 10)
+
         /** Format given value based on data type */
         const format = x => !isNaN(x) ? x : Array.isArray(x) ? `'{${x}}'` : `'${x}'`
         /** Coordinate property keys for coord table column type */
@@ -23,36 +35,33 @@ const insertUser = async ({ address, repeatPassword, ...user }) => {
         const userValues = Object.values(user).map(x => format(x))
         /** Stringify user property values for storage */
         const interestValues = interestMap[user.interest].map(x => format(x))
-        /** Insert to coordinate table with address table association */
+
         await pool.query(`INSERT INTO coordinate_table (${coordKeys})
             VALUES (${coordValues})`)
-        /** Insert to address table with user table association */
         await pool.query(`INSERT INTO address_table (value)
             VALUES ('${address.value}')`)
-        /** Insert to main user table */
-        await pool.query(`INSERT INTO user_table (${userKeys})
-            VALUES (${userValues})`)
-        /** Queries all existing users that match the 5 given properties */
+        const result = await pool.query(`INSERT INTO user_table (${userKeys})
+            VALUES (${userValues}) RETURNING id`)
+        const id = result.rows[0].id
         const matches = await pool.query(
             `SELECT a.username, b.value as address, a.age, a.gender,
                     a.hobbies, a.outgoing, a.pets
                 FROM
                     user_table a, address_table b
                 WHERE
-                    a.id=b.id
+                    a.id!=${id}
+                    AND a.id=b.id
                     AND age BETWEEN ${user.range[0]} and ${user.range[1]}
                     AND gender in (${interestValues})
                     AND hobbies='${user.hobbies}'
                     AND outgoing='${user.outgoing}'
                     AND pets='${user.pets}'`
         )
-        console.log('user', user)
-        console.table(matches.rows.length > 0 ? matches.rows : '')
+
+        console.table(matches.rows.length > 0 ? matches.rows : [])
         return matches.rows || []
     } catch (error) { console.error(error) }
 }
-
-module.exports = insertUser
 
 /**
  * Takes two coordinates and calculates the straight line trajectory using
@@ -78,3 +87,5 @@ const calcDistance = (
         * Math.cos(toRadians(lat))
     return radius * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x))
 }
+
+module.exports = insertUser

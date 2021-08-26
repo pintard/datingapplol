@@ -1,3 +1,4 @@
+-- FIRST IN ORDER
 INSERT INTO
     coordinate_table (latitude, longitude)
     VALUES (34.433, -78.128);

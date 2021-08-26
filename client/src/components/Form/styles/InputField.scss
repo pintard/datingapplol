@@ -5,6 +5,7 @@ input {
     border-radius: 10px;
     font-size: 1.7em;
     border: 2px solid transparent;
+    opacity: 0.6;
 }
 
 input::placeholder {
@@ -13,4 +14,16 @@ input::placeholder {
 
 input:focus {
     border: 2px solid #7CA7E7;
+    background: #dee7f3;
+
+    &::placeholder {
+        color: #a5c1eb;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    input {
+        font-size: 4vw;
+        padding: 20px 12px;
+    }
 }

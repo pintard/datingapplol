@@ -17,15 +17,13 @@ import './index.css'
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <div id="view">
-        <Switch>
+      <Switch>
           <Route exact path="/" component={SignUpView} />
           <Route exact path="/about" component={AboutView} />
           <Route exact path="/location" component={LocationView} />
           <Route exact path="/interest" component={InterestView} />
           <Route exact path="/result" component={ResultView} />
-        </Switch>
-      </div>
+      </Switch>
     </Router>
   </React.StrictMode>,
   document.getElementById('root')

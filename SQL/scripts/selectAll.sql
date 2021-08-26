@@ -1,3 +1,4 @@
+-- SELECT ALL PUBLIC FRIENDLY USER REPRESENTATIONS
 SELECT
     a.username,
     b.value as address,

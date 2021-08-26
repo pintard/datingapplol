@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './styles/InputField.scss'
 
-const InputField = ({ name, type, setData }) => {
+const InputField = ({ name, type, placeholder, setData }) => {
     const [input, setInput] = useState(name === "age" ? 18 : '')
 
     const update = ({ target: { value } }) => {
@@ -19,6 +19,7 @@ const InputField = ({ name, type, setData }) => {
 
     return <input
         type={type}
+        placeholder={placeholder}
         min={18}
         name={name}
         value={input}
