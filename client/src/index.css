@@ -50,6 +50,7 @@ body,
   gap: 28px;
   -webkit-box-shadow: 6px 10px 20px 0 rgba(0, 0, 0, 0.1);
   box-shadow: 6px 10px 20px 0 rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
 }
 
 .stage-view>span {
