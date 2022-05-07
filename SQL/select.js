@@ -11,19 +11,13 @@ const pool = require('./pgPool')
 const selectUsers = async () => {
     try {
         const users = await pool.query(
-            `SELECT
-                a.username,
-                b.value as address,
-                a.age,
-                a.gender,
-                a.hobbies,
-                a.outgoing,
-                a.pets
-            FROM
-                user_table a, address_table b
-            WHERE
-                a.id=b.id`)
+            `SELECT a.username, b.value as address, a.age, a.gender, a.hobbies, a.outgoing, a.pets
+                FROM user_table a, address_table b
+                WHERE a.id = b.id`
+        )
+
         console.table(users.rows)
+
         return ejs.render(
             `<table>
                 <tr>
@@ -46,7 +40,8 @@ const selectUsers = async () => {
                         <td><%= users[i].pets %></td>
                     </tr>
                 <% } %>
-            </table>`, { users: users.rows }
+            </table>`,
+            { users: users.rows }
         )
     } catch (error) { console.error(error) }
 }

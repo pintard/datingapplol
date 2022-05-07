@@ -12,8 +12,7 @@ const Slider = ({ name, data: { location: { distance } }, setData }) => {
         value,
         min: 0,
         max: 300,
-        onChange: newDistance =>
-            update(newDistance),
+        onChange: newDistance => update(newDistance)
     })
 
     const update = newDistance => {

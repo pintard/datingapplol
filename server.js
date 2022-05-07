@@ -1,37 +1,30 @@
-if (process.env.NODE_ENV !== 'production') require('dotenv').config()
-const Express = require('express')
-const App = Express()
+if (process.env.NODE_ENV !== 'production')
+    require('dotenv').config()
+
+const express = require('express')
+const app = express()
+
 const insertUser = require('./SQL/insert')
 const selectUsers = require('./SQL/select')
+
 const port = process.env.PORT
 const build = `${__dirname}/client/build`
 
-App.set('json spaces', 2)
-App.use(Express.json())
-App.use(Express.urlencoded({ extended: false }))
-App.use(Express.static(build))
+app.set('json spaces', 2)
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+app.use(express.static(build))
 
-/** Serve built react app as static files on home */
-App.get('/', (request, response) =>
-    response.sendFile(`${build}/index.html`))
+app.get('/', (req, res) => res.sendFile(`${build}/index.html`))
 
-/** API route for general scope database interactions */
-App.route('/api/users')
-    /** Gets a table of all users */
-    .get(async (request, response) => response.send(await selectUsers()))
-    /** Posts a user to the database and return list of matches */
-    .post(async (request, response) => {
-        const user = Object.assign(...Object.values(request.body))
+app.route('/api/users')
+    .get(async (req, res) => res.send(await selectUsers()))
+    .post(async (req, res) => {
+        const user = Object.assign(...Object.values(req.body))
         const matches = await insertUser(user)
-        response.json(matches)
+        res.json(matches)
     })
 
-/** API route for specific scope database interactions */
-App.route('/api/users/:id')
-    .get((request, response) => { })
-    .put((request, response) => { })
-    .delete((request, response) => { })
-
-App.listen(port, error => error ?
+app.listen(port, error => error ?
     console.log("\x1b[31mERROR:\x1b[0m", error) :
     console.log(`\x1b[35mConnected to \x1b[36mport: ${port}\x1b[0m`))

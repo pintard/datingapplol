@@ -7,7 +7,6 @@ import Slider from './Form/Slider'
 import RadioButtonGroup from './Form/RadioButtonGroup'
 import LocationField from './Form/LocationField'
 
-/** The memory reference for user object */
 const user = {
     signUp: {
         username: '',
@@ -45,11 +44,9 @@ const user = {
  * @returns {boolean} true if contains at least one empty
  */
 const containsEmptyValue = object => {
-    let newObject = Object.assign(
-        {}, ...Object.values(object), object.location.address)
+    let newObject = Object.assign({}, ...Object.values(object), object.location.address)
     delete newObject.address
-    return Object.values(newObject)
-        .some(x => x === '' || x.length === 0 || x === null)
+    return Object.values(newObject).some(x => x === '' || x.length === 0 || x === null)
 }
 
 /**
@@ -69,16 +66,13 @@ const verify = async (data, history) => {
         interest: "result"
     }
     if (Object.values(fields).every(val => val)) {
-        if (key === "signUp" && fields.password !== fields.repeatPassword)
-            return alert('passwords must match')
-
-        if (key === "about" && fields.age < 18)
-            return alert('must be 18 years old or older')
+        if (key === "signUp" && fields.password !== fields.repeatPassword) return alert('passwords must match')
+        if (key === "about" && fields.age < 18) return alert('must be 18 years old or older')
 
         user[key] = fields
 
         if (key !== "interest") history.push(`/${routeMap[key]}`)
-        else {
+        else { // Submit
             if (!containsEmptyValue(user)) {
                 try {
                     const post = new Request('/api/users', {
@@ -87,7 +81,6 @@ const verify = async (data, history) => {
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(user)
                     })
-                    /** server response: user matches */
                     const response = await fetch(post)
                     const matches = await response.json()
                     history.push({
@@ -103,7 +96,6 @@ const verify = async (data, history) => {
                 history.push('/')
             }
         }
-
         console.log(user)
     } else alert("all fields must be filled")
 }
@@ -117,6 +109,7 @@ export const SignUpView = () => {
             repeatPassword: ""
         }
     })
+
     return (
         <div className="stage-view">
             <h2>create ur account!</h2>
@@ -159,10 +152,9 @@ export const AboutView = () => {
             range: [21, 29]
         }
     })
-    const genders = ["man", "woman", "other"]
-        .map(x => ({ label: x, value: x }))
-    const interests = ["men", "women", "others", "everyone"]
-        .map(x => ({ label: x, value: x }))
+    const genders = ["man", "woman", "other"].map(x => ({ label: x, value: x }))
+    const interests = ["men", "women", "others", "everyone"].map(x => ({ label: x, value: x }))
+
     return (
         <div className="stage-view">
             <h2>who are you?</h2>
@@ -206,6 +198,7 @@ export const LocationView = () => {
             distance: 30
         }
     })
+
     return (
         <div className="stage-view">
             <h2>where are you?</h2>
@@ -234,10 +227,9 @@ export const InterestView = () => {
             pets: ""
         }
     })
-    const hobbies = ["kayaking", "walking", "swimming", "knitting", "basketball", "none"]
-        .map(x => ({ label: x, value: x }))
-    const pets = ["dog", "cat", "fish", "snake", "exotic", "none"]
-        .map(x => ({ label: x, value: x }))
+    const hobbies = ["kayaking", "walking", "swimming", "knitting", "basketball", "none"].map(x => ({ label: x, value: x }))
+    const pets = ["dog", "cat", "fish", "snake", "exotic", "none"].map(x => ({ label: x, value: x }))
+
     return (
         <div className="stage-view">
             <h2>what are you into?</h2>
@@ -260,10 +252,11 @@ export const InterestView = () => {
 
 export const ResultView = () => {
     const location = useLocation()
+
     if (location.state) {
         const { username, matches } = location.state
-        if (matches.length <= 0)
-            return <h1 id="matches-header">No matches found!</h1>
+        if (matches.length <= 0) return <h1 id="matches-header">No matches found!</h1>
+
         return (
             <div>
                 <h1 id="matches-header">Matches for {username}</h1>
@@ -296,5 +289,6 @@ export const ResultView = () => {
             </div>
         )
     }
+    
     return <div>nothing here</div>
 }

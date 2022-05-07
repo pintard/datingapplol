@@ -23,39 +23,29 @@ const insertUser = async ({ address, repeatPassword, ...user }) => {
 
         user.password = await bcrypt.hash(user.password, 10)
 
-        /** Format given value based on data type */
         const format = x => !isNaN(x) ? x : Array.isArray(x) ? `'{${x}}'` : `'${x}'`
-        /** Coordinate property keys for coord table column type */
         const coordKeys = Object.keys(address.coordinates).join(', ')
-        /** Stringify coordinates for storage */
         const coordValues = Object.values(address.coordinates).map(x => format(x))
-        /** User property keys for user table column type */
         const userKeys = Object.keys(user).join(', ')
-        /** Stringify user property values for storage */
         const userValues = Object.values(user).map(x => format(x))
-        /** Stringify user property values for storage */
         const interestValues = interestMap[user.interest].map(x => format(x))
 
-        await pool.query(`INSERT INTO coordinate_table (${coordKeys})
-            VALUES (${coordValues})`)
-        await pool.query(`INSERT INTO address_table (value)
-            VALUES ('${address.value}')`)
-        const result = await pool.query(`INSERT INTO user_table (${userKeys})
-            VALUES (${userValues}) RETURNING id`)
+        await pool.query(`INSERT INTO coordinate_table (${coordKeys}) VALUES (${coordValues})`)
+        await pool.query(`INSERT INTO address_table (address) VALUES ('${address.value}')`)
+        const result = await pool.query(`INSERT INTO user_table (${userKeys}) VALUES (${userValues}) RETURNING id`)
+
         const id = result.rows[0].id
+        
         const matches = await pool.query(
-            `SELECT a.username, b.value as address, a.age, a.gender,
-                    a.hobbies, a.outgoing, a.pets
-                FROM
-                    user_table a, address_table b
-                WHERE
-                    a.id!=${id}
-                    AND a.id=b.id
-                    AND age BETWEEN ${user.range[0]} and ${user.range[1]}
-                    AND gender in (${interestValues})
-                    AND hobbies='${user.hobbies}'
-                    AND outgoing='${user.outgoing}'
-                    AND pets='${user.pets}'`
+            `SELECT a.username, b.value as address, a.age, a.gender, a.hobbies, a.outgoing, a.pets
+                FROM user_table a, address_table b
+                WHERE a.id != ${id}
+                AND a.id = b.id
+                AND age BETWEEN ${user.range[0]} and ${user.range[1]}
+                AND gender in (${interestValues})
+                AND hobbies = '${user.hobbies}'
+                AND outgoing = '${user.outgoing}'
+                AND pets = '${user.pets}'`
         )
 
         console.table(matches.rows.length > 0 ? matches.rows : [])

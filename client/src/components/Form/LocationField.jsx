@@ -1,6 +1,4 @@
-import usePlacesAutocomplete, {
-    getGeocode, getLatLng
-} from 'use-places-autocomplete'
+import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
 import useOnclickOutside from 'react-cool-onclickoutside'
 import './styles/LocationField.scss'
 

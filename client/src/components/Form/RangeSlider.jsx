@@ -13,8 +13,7 @@ const RangeSlider = ({ name, data: { about: { range } }, setData }) => {
         value: values,
         min: 18,
         max: 60,
-        onChange: newRange =>
-            update(newRange),
+        onChange: newRange => update(newRange)
     })
 
     const update = newRange => {
